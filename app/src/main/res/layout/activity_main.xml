@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#8CDACE"
     tools:context=".MainActivity">
 
     <Button
@@ -21,11 +20,9 @@
         android:id="@+id/textView"
         android:layout_width="263dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:text="Text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteY="200dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"

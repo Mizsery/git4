@@ -9,12 +9,12 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 interface GitHubService {
-    // GET /repos/:owner/:repo/contributors
+    // GET /users/:username
 
-    @GET("repos/{owner}/{repo}/contributors")
-    Call<List<Contributor>> repoContributors(
-            @Path("owner") String owner,
-            @Path("repo") String repo);
+    @GET("/users/{username}")
+    Call<User> getUser(
+            @Path("username") String userName
+    );
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://api.github.com/")

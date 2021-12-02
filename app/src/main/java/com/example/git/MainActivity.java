@@ -33,21 +33,42 @@ public class  MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GitHubService gitHubService = GitHubService.retrofit.create(GitHubService.class);
-                final Call<List<Contributor>> call =
-                        gitHubService.repoContributors("square", "picasso");
+                mProgressBar.setVisibility(View.VISIBLE);
 
-                call.enqueue(new Callback<List<Contributor>>() {
+                GitHubService gitHubService = GitHubService.retrofit.create(GitHubService.class);
+                final Call<User> call =
+                        gitHubService.getUser("Mizsery");
+
+                call.enqueue(new Callback<User>() {
                     @Override
-                    public void onResponse(Call<List<Contributor>> call, Response<List<Contributor>> response) {
-                        final TextView textView = (TextView) findViewById(R.id.textView);
-                        textView.setText(response.body().toString());
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        // response.isSuccessfull() is true if the response code is 2xx
+                        if (response.isSuccessful()) {
+                            User user = response.body();
+
+                            // Получаем json из github-сервера и конвертируем его в удобный вид
+                            mTextView.setText("Аккаунт Github: " + user.getName() +
+                                    "\nСайт: " + user.getBlog() +
+                                    "\nКомпания: " + user.getCompany());
+
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                        } else {
+                            int statusCode = response.code();
+
+                            // handle request errors yourself
+                            ResponseBody errorBody = response.errorBody();
+                            try {
+                                mTextView.setText(errorBody.string());
+                                mProgressBar.setVisibility(View.INVISIBLE);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
 
                     @Override
-                    public void onFailure(Call<List<Contributor>> call, Throwable throwable) {
-                        final TextView textView = (TextView) findViewById(R.id.textView);
-                        textView.setText("Что-то пошло не так: " + throwable.getMessage());
+                    public void onFailure(Call<User> call, Throwable throwable) {
+                        mTextView.setText("Что-то пошло не так: " + throwable.getMessage());
                     }
                 });
             }
